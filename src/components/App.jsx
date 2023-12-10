@@ -30,7 +30,13 @@ class App extends Component {
       .then(response => response.json())
       .then(data => {
         this.setState(prevState => ({
-          images: [...prevState.images, ...data.hits],
+          images: [
+            ...prevState.images,
+            ...data.hits.map(image => ({
+              ...image,
+              uniqueKey: `${image.id}_${prevState.page}`,
+            })),
+          ],
           page: prevState.page + 1,
         }));
       })
