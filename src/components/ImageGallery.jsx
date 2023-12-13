@@ -1,21 +1,29 @@
 import React from 'react';
+import ImageGalleryItem from './ImageGalleryItem';
 
-const ImageGallery = ({ images, onImageClick }) => (
-  <ul className="gallery">
-    {images.map(image => (
-      <li
-        key={image.uniqueKey}
-        className="gallery-item"
-        onClick={() => onImageClick(image.largeImageURL)}
-      >
-        <img
-          src={image.webformatURL}
-          alt={image.tags}
-          className="gallery-item-image"
+const ImageGallery = ({ images, onImageClick }) => {
+  const galleryStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gridGap: '10px',
+    listStyle: 'none',
+    padding: '0',
+    marginTop: '20px',
+  };
+
+  return (
+    <ul style={galleryStyle}>
+      {images.map(image => (
+        <ImageGalleryItem
+          key={image.id}
+          image={image}
+          onClick={() => onImageClick(image)}
         />
-      </li>
-    ))}
-  </ul>
-);
+      ))}
+    </ul>
+  );
+};
 
 export default ImageGallery;

@@ -1,11 +1,15 @@
 import React from 'react';
 
-const ImageGalleryItem = ({ image, onImageClick }) => {
+const ImageGalleryItem = ({ image, onClick }) => {
+  const galleryItemStyle = {
+    position: 'relative',
+    overflow: 'hidden',
+    width: '600px',
+    height: '360px',
+  };
+
   return (
-    <li
-      className="gallery-item"
-      onClick={() => onImageClick(image.largeImageURL)}
-    >
+    <li style={galleryItemStyle} onClick={onClick}>
       <img src={image.webformatURL} alt={image.id} />
     </li>
   );

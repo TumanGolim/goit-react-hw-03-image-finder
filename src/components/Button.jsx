@@ -1,14 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const Button = ({ onLoadMore }) => (
-  <button type="button" className="load-more-button" onClick={onLoadMore}>
-    <span className="button-label">Load more</span>
-  </button>
-);
+const Button = ({ onClick }) => {
+  const buttonStyle = {
+    height: '30px',
+    marginTop: '20px',
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  };
 
-Button.propTypes = {
-  onLoadMore: PropTypes.func.isRequired,
+  return (
+    <button style={buttonStyle} onClick={onClick}>
+      Load more
+    </button>
+  );
 };
 
 export default Button;
