@@ -1,59 +1,74 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
-const Searchbar = ({ onSubmit }) => {
-  const [query, setQuery] = useState('');
+class Searchbar extends Component {
+  constructor(props) {
+    super(props);
 
-  const handleSubmit = e => {
+    this.state = {
+      query: '',
+    };
+  }
+
+  handleSubmit = e => {
     e.preventDefault();
 
+    const { query } = this.state;
     if (query.trim() !== '') {
-      onSubmit(query.trim());
+      this.props.onSubmit(query.trim());
     }
   };
 
-  const searchbarStyle = {
-    backgroundColor: '#003366',
-    padding: '10px',
-    display: 'flex',
-    justifyContent: 'center',
+  handleChange = e => {
+    this.setState({ query: e.target.value });
   };
 
-  const formStyle = {
-    display: 'flex',
-  };
+  render() {
+    const { query } = this.state;
 
-  const inputStyle = {
-    height: '20px',
-    width: '200px',
-    padding: '5px',
-    marginRight: '5px',
-  };
+    const searchbarStyle = {
+      backgroundColor: '#003366',
+      padding: '10px',
+      display: 'flex',
+      justifyContent: 'center',
+    };
 
-  const buttonStyle = {
-    height: '30px',
-  };
+    const formStyle = {
+      display: 'flex',
+    };
 
-  return (
-    <header style={searchbarStyle}>
-      <form style={formStyle} onSubmit={handleSubmit}>
-        <button type="submit" style={buttonStyle}>
-          <span style={{ display: 'inline-block', color: 'white' }}>
-            Search
-          </span>
-        </button>
+    const inputStyle = {
+      height: '20px',
+      width: '200px',
+      padding: '5px',
+      marginRight: '5px',
+    };
 
-        <input
-          style={inputStyle}
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-        />
-      </form>
-    </header>
-  );
-};
+    const buttonStyle = {
+      height: '30px',
+    };
+
+    return (
+      <header style={searchbarStyle}>
+        <form style={formStyle} onSubmit={this.handleSubmit}>
+          <button type="submit" style={buttonStyle}>
+            <span style={{ display: 'inline-block', color: 'white' }}>
+              Search
+            </span>
+          </button>
+
+          <input
+            style={inputStyle}
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            value={query}
+            onChange={this.handleChange}
+          />
+        </form>
+      </header>
+    );
+  }
+}
 
 export default Searchbar;
