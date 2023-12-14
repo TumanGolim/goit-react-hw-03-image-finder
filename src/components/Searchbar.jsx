@@ -5,7 +5,10 @@ const Searchbar = ({ onSubmit }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit(query);
+
+    if (query.trim() !== '') {
+      onSubmit(query.trim());
+    }
   };
 
   const searchbarStyle = {
