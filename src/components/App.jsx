@@ -7,105 +7,67 @@ import Loader from './Loader';
 import Modal from './Modal';
 
 const API_KEY = '40273804-3b8c2dbaae3f52338e7fd3d6d';
-// Ваші імпорти
 
-class App extends Component {
-  state = {
-    images: [],
-    isLoading: false,
-    showModal: false,
-    modalImage: '',
-    query: '',
-    page: 1,
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          `https://pixabay.com/api/?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+        );
+        const newImages = response.data.hits;
+
+        if (page === 1) {
+          setImages(newImages);
+        } else {
+          setImages(prevImages => [...prevImages, ...newImages]);
+        }
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [query, page]);
+
+  const handleSearch = newQuery => {
+    setQuery(newQuery);
+    setPage(1);
+    setImages([]);
   };
 
-  getUniqueKey = () => {
-    return Math.floor(Math.random() * 10000000);
+  const loadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  handleFormSubmit = query => {
-    if (query.trim() !== this.state.query.trim()) {
-      this.setState({ query, images: [], page: 1, showModal: false }, () => {
-        this.fetchImages();
-      });
-    }
+  const openModal = image => {
+    setSelectedImage(image);
   };
 
-  fetchImages = () => {
-    const { query, page } = this.state;
-    const apiKey = '40273804-3b8c2dbaae3f52338e7fd3d6d';
-    const apiUrl = `https://pixabay.com/api/?q=${query}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`;
-
-    this.setState({ isLoading: true });
-
-    fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
-        const newImages = data.hits.map(image => ({
-          ...image,
-          uniqueKey: this.getUniqueKey(),
-        }));
-
-        this.setState(prevState => ({
-          images: [...prevState.images, ...newImages],
-          page: prevState.page + 1,
-        }));
-      })
-      .catch(error => console.error('Error fetching images:', error))
-      .finally(() => this.setState({ isLoading: false }));
+  const closeModal = () => {
+    setSelectedImage(null);
   };
 
-  handleImageClick = imageUrl => {
-    this.setState({ showModal: true, modalImage: imageUrl });
-  };
-
-  closeModal = () => {
-    this.setState({ showModal: false, modalImage: '' });
-  };
-
-  handleOverlayClick = e => {
-    if (e.target === e.currentTarget) {
-      this.closeModal();
-    }
-  };
-
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.closeModal();
-    }
-  };
-
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  loadMoreImages = () => {
-    this.fetchImages();
-  };
-
-  render() {
-    const { images, isLoading, showModal, modalImage } = this.state;
-
-    return (
-      <div>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery images={images} onImageClick={this.handleImageClick} />
-        {isLoading && <Loader />}
-        {images.length > 0 && !isLoading && (
-          <Button onLoadMore={this.loadMoreImages} />
-        )}
-        {showModal && (
-          <div className="overlay" onClick={this.handleOverlayClick}>
-            <Modal onClose={this.closeModal} largeImageURL={modalImage} />
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Searchbar onSubmit={handleSearch} />
+      <ImageGallery images={images} onImageClick={openModal} />
+      {images.length > 0 && <Button onClick={loadMore} />}
+      {isLoading && <Loader />}
+      {selectedImage && <Modal image={selectedImage} onClose={closeModal} />}
+    </div>
+  );
+};
 
 export default App;
