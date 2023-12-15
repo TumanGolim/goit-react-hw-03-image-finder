@@ -1,23 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 
-class Button extends Component {
-  render() {
-    const { onClick } = this.props;
+const LoadMoreButton = styled.button`
+  height: 30px;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
-    const buttonStyle = {
-      height: '30px',
-      marginTop: '20px',
-      display: 'block',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    };
-
-    return (
-      <button style={buttonStyle} onClick={onClick}>
-        Load more
-      </button>
-    );
-  }
-}
+const Button = ({ onClick }) => (
+  <LoadMoreButton onClick={onClick}>Load more</LoadMoreButton>
+);
 
 export default Button;

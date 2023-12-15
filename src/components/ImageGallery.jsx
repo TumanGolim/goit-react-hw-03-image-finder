@@ -1,33 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import ImageGalleryItem from './ImageGalleryItem';
 
-class ImageGallery extends Component {
-  render() {
-    const { images, onImageClick } = this.props;
+const Gallery = styled.ul`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+`;
 
-    const galleryStyle = {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      gridGap: '10px',
-      listStyle: 'none',
-      padding: '0',
-      marginTop: '20px',
-    };
-
-    return (
-      <ul style={galleryStyle}>
-        {images.map(image => (
-          <ImageGalleryItem
-            key={image.id}
-            image={image}
-            onClick={() => onImageClick(image)}
-          />
-        ))}
-      </ul>
-    );
-  }
-}
+const ImageGallery = ({ images, onImageClick }) => (
+  <Gallery>
+    {images.map(image => (
+      <ImageGalleryItem
+        key={image.id}
+        image={image}
+        onClick={() => onImageClick(image)}
+      />
+    ))}
+  </Gallery>
+);
 
 export default ImageGallery;

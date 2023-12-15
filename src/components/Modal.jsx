@@ -1,4 +1,23 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContainer = styled.div`
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+`;
 
 const Modal = ({ image, onClose }) => {
   useEffect(() => {
@@ -23,30 +42,12 @@ const Modal = ({ image, onClose }) => {
     };
   }, [onClose]);
 
-  const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
-
-  const modalStyle = {
-    maxWidth: '90%',
-    maxHeight: '90%',
-    overflow: 'auto',
-  };
-
   return (
-    <div className="overlay" style={overlayStyle}>
-      <div className="modal" style={modalStyle}>
+    <Overlay className="overlay" onClick={onClose}>
+      <ModalContainer className="modal">
         <img src={image.largeImageURL} alt={image.id} />
-      </div>
-    </div>
+      </ModalContainer>
+    </Overlay>
   );
 };
 

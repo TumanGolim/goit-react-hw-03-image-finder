@@ -22,7 +22,11 @@ class App extends Component {
   }
 
   fetchData = async () => {
-    const { query, page } = this.state;
+    const { query, page, isLoading } = this.state;
+
+    if (isLoading) {
+      return;
+    }
 
     try {
       this.setState({ isLoading: true });
@@ -48,7 +52,10 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.fetchData();
+    const { query } = this.state;
+    if (query) {
+      this.fetchData();
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -60,11 +67,17 @@ class App extends Component {
   }
 
   handleSearch = newQuery => {
-    this.setState({
-      query: newQuery,
-      page: 1,
-      images: [],
-    });
+    this.setState(prevState => {
+      if (newQuery.trim() !== prevState.query.trim()) {
+        return {
+          query: newQuery,
+          page: 1,
+          images: [],
+        };
+      }
+
+      return null;
+    }, this.fetchData);
   };
 
   loadMore = () => {
